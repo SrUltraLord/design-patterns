@@ -1,7 +1,6 @@
 package com.darp.designpatterns.application.usecase;
 
 import com.darp.designpatterns.application.ports.SearchBookUseCase;
-import com.darp.designpatterns.application.search.ReactiveBookSearchStrategy;
 import com.darp.designpatterns.application.search.ReactiveBookSearchStrategyProvider;
 import com.darp.designpatterns.domain.models.Book;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class SearchBookUseCaseImpl implements SearchBookUseCase {
     String normalized = field == null ? null : field.trim().toLowerCase();
 
     return Optional.ofNullable(strategyProvider.get(normalized))
-        .map((ReactiveBookSearchStrategy strategy) -> strategy.search(value))
+        .map(strategy -> strategy.search(value))
         .orElseGet(Flux::empty);
   }
 }
