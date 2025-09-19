@@ -36,5 +36,5 @@ principal que demuestre el uso de estas funcionalidades.
 - [x] Observer: Observer y PrestamoObserver notifican cambios en el estado de los libros (por ejemplo, al prestar).
 - [ ] Decorator: PrestamoDecorator añade funcionalidad de préstamo sin modificar la clase Libro.
 - [x] Chain of Responsibility: Validador (ValidadorTitulo, ValidadorAutor) valida los datos del libro en una cadena.
-- [ ] Adapter: LegacyLibroAdapter adapta la clase LegacyLibro (con métodos incompatibles) para que implemente la interfaz
-      ILibro, permitiendo integrar libros de un sistema antiguo en la biblioteca sin cambios en el código principal.
+- [x] Adapter: LegacyLibroAdapter adapta la clase LegacyLibro (con métodos incompatibles) para que implemente la interfaz
+      `Book`, permitiendo integrar libros de un sistema antiguo en la biblioteca sin cambios en el código principal.
