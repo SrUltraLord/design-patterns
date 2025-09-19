@@ -10,6 +10,7 @@ import com.darp.designpatterns.domain.ports.BookRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.constraints.NotBlank;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -28,19 +29,22 @@ public class BookController {
   }
 
   @GetMapping("/search")
-  public Flux<BookResponseDTO> searchBooks(@RequestParam String field, @RequestParam String value) {
+  public Flux<BookResponseDTO> searchBooks(
+      @RequestParam @NotBlank(message = "Field is required") String field,
+      @RequestParam @NotBlank(message = "Value is required") String value) {
     return searchBookUseCase.searchByField(field, value).map(bookDtoMapper::toResponseDTO);
   }
 
   @PostMapping
-  public Mono<BookResponseDTO> addBook(@RequestBody BookRequestDTO request) {
+  public Mono<BookResponseDTO> addBook(@Valid @RequestBody BookRequestDTO request) {
     Book book = bookDtoMapper.toDomain(request);
     return repositoryPort.save(book).map(bookDtoMapper::toResponseDTO);
   }
 
   @PostMapping("/{id}/loan")
   public Mono<ResponseEntity<String>> loanBook(
-      @PathVariable String id, @RequestParam String borrower) {
+    @PathVariable @NotBlank(message = "Book ID is required") String id,
+    @RequestParam @NotBlank(message = "Borrower is required") String borrower) {
     return loanBookUseCase
         .loanBook(id, borrower)
         .map(
