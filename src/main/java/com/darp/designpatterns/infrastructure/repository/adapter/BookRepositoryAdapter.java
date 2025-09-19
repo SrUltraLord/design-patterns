@@ -5,20 +5,16 @@ import com.darp.designpatterns.domain.ports.BookRepositoryPort;
 import com.darp.designpatterns.infrastructure.repository.jpa.BookJpaRepository;
 import com.darp.designpatterns.infrastructure.repository.mapper.BookEntityMapper;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
+@RequiredArgsConstructor
 public class BookRepositoryAdapter implements BookRepositoryPort {
-
   private final BookJpaRepository jpaRepository;
   private final BookEntityMapper mapper;
-
-  public BookRepositoryAdapter(BookJpaRepository jpaRepository, BookEntityMapper mapper) {
-    this.jpaRepository = jpaRepository;
-    this.mapper = mapper;
-  }
 
   @Override
   public Flux<Book> findAll() {
@@ -54,11 +50,8 @@ public class BookRepositoryAdapter implements BookRepositoryPort {
 
   @Override
   public Mono<Book> findById(String id) {
-    return Mono.defer(
-        () -> {
-          var entity = jpaRepository.findById(id);
-          return entity.map(mapper::toDomain).map(Mono::just).orElse(Mono.empty());
-        });
+    return Mono.fromCallable(() -> jpaRepository.findById(id))
+        .flatMap(result -> result.map(mapper::toDomain).map(Mono::just).orElse(Mono.empty()));
   }
 
   @Override

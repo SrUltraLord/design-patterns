@@ -8,6 +8,7 @@ import com.darp.designpatterns.domain.models.*;
 import com.darp.designpatterns.domain.ports.BookRepositoryPort;
 import com.darp.designpatterns.domain.legacy.LegacyBook;
 import com.darp.designpatterns.domain.legacy.LegacyBookAdapter;
+import com.darp.designpatterns.domain.patterns.decorator.LoanDecorator;
 import reactor.core.publisher.Hooks;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -42,17 +43,29 @@ public class DesignPatternsApplication {
           nonFictionFactory.createBook(
               "Clean Architecture", "Robert C. Martin", BookFormat.PAPERBACK, null);
 
-  log.info("🚀 Starting Design Patterns Demo - Observer & Adapter Pattern Implementation");
+      // Decorator pattern: add loan functionality to a book
+      var decoratedFictionBook = new LoanDecorator(fictionBook);
+      if (decoratedFictionBook.loan("DecoratorUser")) {
+        log.info("🎁 [Decorator] Book '{}' loaned via decorator!", decoratedFictionBook.getTitle());
+      }
+      if (decoratedFictionBook.returnBook()) {
+        log.info(
+            "🎁 [Decorator] Book '{}' returned via decorator!", decoratedFictionBook.getTitle());
+      }
 
-    // Seed DB and register observers
-  // Adapter pattern: integrate a legacy book
-  var legacy = new LegacyBook("L-001", "Don Quijote", "Miguel de Cervantes", "Ficcion", "Fisico", "Disponible");
-  var legacyBook = new LegacyBookAdapter(legacy);
+      log.info("🚀 Starting Design Patterns Demo - Observer & Adapter Pattern Implementation");
 
-    repositoryPort
-      .saveAll(java.util.List.of(fictionBook, nonFictionBook, legacyBook))
-      .doOnNext(book -> log.info("📖 Book saved: {}", book.getTitle()))
-      .then(observerService.registerObserversForAllBooks())
+      // Seed DB and register observers
+      // Adapter pattern: integrate a legacy book
+      var legacy =
+          new LegacyBook(
+              "L-001", "Don Quijote", "Miguel de Cervantes", "Ficcion", "Fisico", "Disponible");
+      var legacyBook = new LegacyBookAdapter(legacy);
+
+      repositoryPort
+          .saveAll(java.util.List.of(fictionBook, nonFictionBook, legacyBook))
+          .doOnNext(book -> log.info("📖 Book saved: {}", book.getTitle()))
+          .then(observerService.registerObserversForAllBooks())
 
           // Demonstrate search functionality
           .thenMany(searchUseCase.searchByField("title", "hobbit"))

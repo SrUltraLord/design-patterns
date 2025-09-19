@@ -2,20 +2,19 @@ package com.darp.designpatterns.domain.models;
 
 import com.darp.designpatterns.domain.patterns.observer.Observer;
 import com.darp.designpatterns.domain.patterns.observer.Subject;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @ToString
 public class Book implements Subject<Book> {
-  private String id;
-  private String title;
-  private String author;
-  private BookGenre genre;
-  private BookFormat format;
+  private final String id;
+  private final String title;
+  private final String author;
+  private final BookGenre genre;
+  private final BookFormat format;
   private BookStatus status;
   private final List<Observer<Book>> observers = new ArrayList<>();
 

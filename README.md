@@ -34,7 +34,7 @@ principal que demuestre el uso de estas funcionalidades.
 - [x] Builder: LibroBuilder permite construir objetos Libro de manera flexible y legible.
 - [x] Strategy: SearchStrategy (SearchByTitle, SearchByAuthor) define diferentes estrategias de búsqueda.
 - [x] Observer: Observer y PrestamoObserver notifican cambios en el estado de los libros (por ejemplo, al prestar).
-- [ ] Decorator: PrestamoDecorator añade funcionalidad de préstamo sin modificar la clase Libro.
+- [x] Decorator: `LoanDecorator` añade funcionalidad de préstamo sin modificar la clase `Book`.
 - [x] Chain of Responsibility: Validador (ValidadorTitulo, ValidadorAutor) valida los datos del libro en una cadena.
 - [x] Adapter: LegacyLibroAdapter adapta la clase LegacyLibro (con métodos incompatibles) para que implemente la interfaz
       `Book`, permitiendo integrar libros de un sistema antiguo en la biblioteca sin cambios en el código principal.
